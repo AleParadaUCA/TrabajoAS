@@ -1,0 +1,18 @@
+name: TrabajoAS
+
+services:
+  router:
+    build: ./Router/router.dockerfile
+    networks:
+      - services
+      - production
+      - development
+
+networks:
+  services:
+    internal: true
+  production:
+    internal: true
+  development:
+    internal: true
+  internet:
