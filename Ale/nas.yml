@@ -1,0 +1,18 @@
+#nas
+version: '3'
+services:
+  dns:
+    image:
+    contaíner-name: dns-nas-services
+    networks:
+      services-net:
+        ipv4_address: 172.18.0.10
+    volumes:
+      - ./bind-config :/etc/bind
+    ports:
+      - " 53:53/udp"
+      - "53:53/tcp"
+    restart: always
+  networks:
+    services-net:
+      external: true

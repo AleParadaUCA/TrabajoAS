@@ -1,0 +1,48 @@
+acceder a postgres:
+    docker exec -it pruebas-postgres-1 psql -U drupal -d drupal
+
+
+comprobar conexion:
+docker exec pruebas-drupal-1 bash
+    psql -h postgres -U drupal -d test
+    (example)
+
+
+################################################
+# version: '3.1'
+
+# services:
+
+#   drupal:
+#     image: drupal:10-apache
+#     ports:
+#       - 8080:80
+#     depends_on:
+#       - postgres
+#     environment:
+#       - POSTGRES_HOST=postgres
+#       - POSTGRES_PORT=5432
+#       - POSTGRES_DB=drupal
+#       - POSTGRES_USER=drupal
+#       - POSTGRES_PASSWORD=example
+#     volumes:
+#       - /var/www/html/modules
+#       - /var/www/html/profiles
+#       - /var/www/html/themes
+#       - /var/www/html/sites
+#     restart: always
+#     networks:
+#       - production
+
+#   postgres:
+#     image: postgres:16
+#     environment:
+#       POSTGRES_PASSWORD: example
+#       POSTGRES_DB: drupal
+#       POSTGRES_USER: drupal
+#     restart: always
+#     networks:
+#       - production_net
+
+# networks:
+#   production_net:
