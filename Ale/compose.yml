@@ -1,29 +1,45 @@
 version: '3'
 services:
-  webapi_prod:
-    image: mywebapiprod
-    container_name: prod_webapi
-    networks:
-      production_net:
-        ipv4_address: 172.30.0.10
+  nginx:
+    image: nginx:latest
+    container_name: prod_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./app:/var/www/html
     ports:
-      - "80:80"
-    depends_on:
-      - postgres_prod
+      - "8080:80"
+    networks:
+      - production_net
+
+  php:
+    image: php:8.2-fpm
+    container_name: prod_php
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - production_net
+    command: >
+      sh -c "apt-get update && apt-get install -y libpq-dev &&
+             docker-php-ext-install pdo pdo_pgsql &&
+             docker-php-entrypoint php-fpm"
 
   postgres_prod:
     image: postgres:14
     container_name: prod_postgres
     environment:
       POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      production_net:
-        ipv4_address: 172.30.0.11
-      services_net:
-        ipv4_address: 172.20.0.11
+      - production_net
 
 networks:
   production_net:
-    external: true
-  services_net:
-    external: true
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
+volumes:
+  postgres_data:

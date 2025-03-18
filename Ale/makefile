@@ -7,8 +7,12 @@ down:
 restart: 
 	docker compose down
 	docker compose up
+
 console:
-	docker exec -it pruebas-postgres-1 /bin/bash
+	docker exec -it prod_postgres /bin/bash
+postgres:
+	docker exec -it prod_postgres psql -U postgres -d testdb
+
 
 
 # con cont c se para !! 
