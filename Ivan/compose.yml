@@ -3,28 +3,21 @@ version: '3.1'
 services:
 
   apache:
-      image: httpd:latest
-      container_name: dev_apache
-      ports:
-        - "8081:80"
-      volumes:
-        - ./apache.conf:/usr/local/apache2/conf/httpd.conf:ro
-        - ./app:/var/www/html
-      restart: always
-      networks:
-        - development_net
-
-  php:
-    image: php:8.2-fpm
-    container_name: dev_php
+    image: php:7.4-apache
+    container_name: dev_webapi
     volumes:
-      - ./app:/var/www/html
-    command: >
-      sh -c "apt-get update && apt-get install -y libpq-dev &&
-             docker-php-ext-install pdo pdo_mysql &&
-             docker-php-entrypoint php-fpm"
+      - ./html:/var/www/html
+    ports:
+      - "8081:80"
+    restart: always
     networks:
-      - development_net
+      development_net:
+        ipv4_address: 172.40.0.10
+    command: >
+      sh -c "apt-get update && apt-get install -y libpq-dev && 
+      docker-php-ext-install pdo pdo_mysql && 
+      docker-php-entrypoint apache2-foreground"
+
 
   mysql:
     image: mysql:5.7
@@ -36,7 +29,8 @@ services:
       MYSQL_PASSWORD: drupal
     restart: always
     networks:
-      - development_net
+      development_net:
+        ipv4_address: 172.40.0.11
 
 networks:
   development_net:
