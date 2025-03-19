@@ -9,7 +9,8 @@ services:
     ports:
       - "8080:80"
     networks:
-      - production_net
+      production_net:
+        ipv4_address: 172.30.0.10
 
   php:
     image: php:8.2-fpm
@@ -17,7 +18,8 @@ services:
     volumes:
       - ./app:/var/www/html
     networks:
-      - production_net
+      production_net:
+        ipv4_address: 172.30.0.12
     command: >
       sh -c "apt-get update && apt-get install -y libpq-dev &&
              docker-php-ext-install pdo pdo_pgsql &&
@@ -33,13 +35,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - production_net
+      production_net:
+        ipv4_address: 172.30.0.11
+      services_net:
+        ipv4_address: 172.20.0.11
 
 networks:
   production_net:
     ipam:
       config:
         - subnet: 172.30.0.0/24
-
+  services_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
 volumes:
   postgres_data:
