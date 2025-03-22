@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  dns:
+    image: ubuntu/bind9:latest 
+    container_name: dns_nas_services
+    networks:
+      services_net:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - ./bind:/etc/bind
+      - ./cache:/var/cache/bind
+      - ./records:/var/lib/bind
+    ports:
+      - '53:53/udp'
+      - '53:53/tcp'
+    command: >
+      sh -c "chown -R bind:bind /var/cache/bind /var/lib/bind /etc/bind && named -g"
+    # environment
+
+networks:
+  services_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
