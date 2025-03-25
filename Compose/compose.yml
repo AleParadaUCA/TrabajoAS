@@ -1,0 +1,112 @@
+version: '3.1'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: prod_nginx
+    volumes:
+      - ./files/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./files/app:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.10
+  php:
+    image: php:8.2-fpm
+    container_name: prod_php
+    volumes:
+      - ./files/app:/var/www/html
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.12
+    command: >
+      sh -c "apt-get update && apt-get install -y libpq-dev &&
+             docker-php-ext-install pdo pdo_pgsql &&
+             docker-php-entrypoint php-fpm"
+
+  postgres_prod:
+    image: postgres:14
+    container_name: prod_postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.11
+      services_net:
+        ipv4_address: 172.20.0.11
+
+  apache:
+    image: php:7.4-apache
+    container_name: dev_webapi
+    volumes:
+      - ./files/html:/var/www/html
+    ports:
+      - "8081:80"
+    restart: always
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.10
+    command: >
+      sh -c "apt-get update && apt-get install -y libpq-dev && 
+      docker-php-ext-install pdo pdo_mysql && 
+      docker-php-entrypoint apache2-foreground &&
+      apt-get install -y dnsutils"
+
+
+  mysql:
+    image: mysql:5.7
+    container_name: dev_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    restart: always
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.11
+
+#################################################################
+
+  dns:
+    image: ubuntu/bind9:latest 
+    container_name: dns_nas_services
+    networks:
+      services_net:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - ./files/bind:/etc/bind
+      - ./files/cache:/var/cache/bind
+      - ./files/records:/var/lib/bind
+    ports:
+      - '53:53/udp'
+      - '53:53/tcp'
+    command: >
+      sh -c "chown -R bind:bind /var/cache/bind /var/lib/bind /etc/bind && named -g"
+    # environment
+
+#################################################################
+
+
+networks:
+  production_net:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+  services_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  #
+  development_net:
+    ipam:
+      config:
+        - subnet: 172.40.0.0/24
+
+volumes:
+  postgres_data:
