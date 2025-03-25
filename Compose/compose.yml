@@ -52,10 +52,9 @@ services:
       development_net:
         ipv4_address: 172.40.0.10
     command: >
-      sh -c "apt-get update && apt-get install -y libpq-dev && 
+      sh -c "apt-get update && apt-get install -y libpq-dev dnsutils && 
       docker-php-ext-install pdo pdo_mysql && 
-      docker-php-entrypoint apache2-foreground &&
-      apt-get install -y dnsutils"
+      docker-php-entrypoint apache2-foreground"
 
 
   mysql:
@@ -81,8 +80,6 @@ services:
         ipv4_address: 172.20.0.10
     volumes:
       - ./files/bind:/etc/bind
-      - ./files/cache:/var/cache/bind
-      - ./files/records:/var/lib/bind
     ports:
       - '53:53/udp'
       - '53:53/tcp'

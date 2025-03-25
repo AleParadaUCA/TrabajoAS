@@ -9,8 +9,6 @@ services:
         ipv4_address: 172.20.0.10
     volumes:
       - ./bind:/etc/bind
-      - ./cache:/var/cache/bind
-      - ./records:/var/lib/bind
     ports:
       - '53:53/udp'
       - '53:53/tcp'
