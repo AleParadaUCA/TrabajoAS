@@ -16,6 +16,16 @@ services:
       sh -c "chown -R bind:bind /var/cache/bind /var/lib/bind /etc/bind && named -g"
     # environment
 
+  nas:
+    image: ubuntu:latest
+    container_name: nas_services
+    networks:
+      - services_net
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
+      
+
 networks:
   services_net:
     driver: bridge
