@@ -35,12 +35,20 @@ services:
 
 networks:
   production_net:
+    driver: macvlan
+    driver_opts:
+      parent: "ens20"
     ipam:
       config:
-        - subnet: 172.30.0.0/24
+       -  subnet: 172.30.0.0/24
+          gateway: 172.30.0.1
   services_net:
+    driver: macvlan
+    driver_opts:
+      parent: "ens19"
     ipam:
       config:
-        - subnet: 172.20.0.0/24
+       -  subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
 volumes:
   postgres_data:
