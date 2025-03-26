@@ -24,6 +24,7 @@ services:
     volumes:
       - ./backups:/backups
     entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
+    #command: bash -c "echo '0 1 * * * /backups/backup.sh' | crontab - && cron -f"
       
 
 networks:
