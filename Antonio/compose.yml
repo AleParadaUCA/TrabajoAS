@@ -1,18 +1,46 @@
-name: TrabajoAS
-
 services:
-  router:
-    build: ./Router/router.dockerfile
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./app:/var/www/html
+    ports:
+      - "8080:80"
     networks:
-      - services
-      - production
-      - development
+      production_net:
+        ipv4_address: 172.30.0.10
+
+  php:
+    build:
+      dockerfile: ./php.Dockerfile
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.12
+
+  postgres_prod:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: testdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.11
+      services_net:
+        ipv4_address: 172.20.0.11
 
 networks:
-  services:
-    internal: true
-  production:
-    internal: true
-  development:
-    internal: true
-  internet:
+  production_net:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+  services_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+volumes:
+  postgres_data:
