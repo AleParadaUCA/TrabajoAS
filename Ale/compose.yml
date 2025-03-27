@@ -39,6 +39,14 @@ services:
         ipv4_address: 172.30.0.11
       services_net:
         ipv4_address: 172.20.0.11
+  nas:
+    image: ubuntu:latest
+    container_name: nas_services
+    networks:
+      - services_net
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron postgresql-client && cron -f"]
 
 networks:
   production_net:

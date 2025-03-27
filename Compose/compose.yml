@@ -33,7 +33,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: testdb
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./vol/postgres_data:/var/lib/postgresql/data
     networks:
       production_net:
         ipv4_address: 172.30.0.11
@@ -47,7 +47,6 @@ services:
       - ./vol/html:/var/www/html
     ports:
       - "8081:80"
-    restart: always
     networks:
       development_net:
         ipv4_address: 172.40.0.10
@@ -65,7 +64,8 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-    restart: always
+      volumes:
+      - ./vol/mysql_data:/var/lib/mysql
     networks:
       development_net:
         ipv4_address: 172.40.0.11
@@ -87,12 +87,24 @@ services:
       - '53:53/udp'
       - '53:53/tcp'
     environment:
-      - TZ=UTC  # Opcional: establecer zona horaria
-
+      - TZ=UTC 
     # healthcheck:  #compribar que funciona el dns
     #   test: ["CMD", "named-checkconf", "/etc/bind/named.conf"]
+    #   interval: 30s
     #   timeout: 5s
     #   retries: 3
+
+  nas:
+    image: ubuntu:latest
+    container_name: nas_services
+    networks:
+      - services_net
+      - development_net
+    volumes:
+      - ./vol/backups:/backups
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync mysql-client postgresql-client cron && cron -f"]
+    environment:
+      - TZ=UTC 
 
 #################################################################
 
