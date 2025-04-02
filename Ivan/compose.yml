@@ -9,7 +9,6 @@ services:
       - ./html:/var/www/html
     ports:
       - "8081:80"
-    restart: always
     networks:
       development_net:
         ipv4_address: 172.40.0.10
@@ -27,13 +26,30 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-    restart: always
     networks:
       development_net:
         ipv4_address: 172.40.0.11
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  nas:
+    image: ubuntu:latest
+    container_name: nas_services
+    networks:
+      - services_net
+      - development_net
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync mysql-client postgresql-client cron && cron -f"]
+    #command: bash -c "echo '0 1 * * * /backups/backup.sh' | crontab - && cron -f"
 
 networks:
   development_net:
     ipam:
       config:
         - subnet: 172.40.0.0/24
+  services_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
