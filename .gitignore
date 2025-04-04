@@ -1,1 +1,4 @@
 Ivan/backups/mysql/
+/Compose/vol/mysql_data
+/Compose/vol/postgres_data
+/Compose/vol/run/named
