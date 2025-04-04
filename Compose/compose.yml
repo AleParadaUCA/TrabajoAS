@@ -39,6 +39,7 @@ services:
         ipv4_address: 172.30.0.11
       services_net:
         ipv4_address: 172.20.0.11
+    entrypoint: ["/bin/sh", "-c", "apt cron && cron -f"]
 
   apache:
     image: php:7.4-apache
@@ -64,11 +65,12 @@ services:
       MYSQL_DATABASE: drupal
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
-      volumes:
+    volumes:
       - ./vol/mysql_data:/var/lib/mysql
     networks:
       development_net:
         ipv4_address: 172.40.0.11
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
 
 #################################################################
 
