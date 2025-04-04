@@ -14,7 +14,8 @@ postgres:
 	docker exec -it prod_postgres psql -U postgres -d testdb
 apache:
 	docker exec -it dev_webapi  /bin/bash
-
+nas:
+	docker exec -it nas_services  /bin/bash
 
 # con cont c se para !! 
 

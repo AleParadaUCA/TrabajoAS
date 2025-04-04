@@ -39,7 +39,6 @@ services:
         ipv4_address: 172.30.0.11
       services_net:
         ipv4_address: 172.20.0.11
-    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
 
   apache:
     image: php:7.4-apache
@@ -70,7 +69,6 @@ services:
     networks:
       development_net:
         ipv4_address: 172.40.0.11
-    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
 
 #################################################################
 
@@ -89,7 +87,7 @@ services:
       - '53:53/udp'
       - '53:53/tcp'
     environment:
-      - TZ=UTC 
+      - TZ=UTC+2
     # healthcheck:  #compribar que funciona el dns
     #   test: ["CMD", "named-checkconf", "/etc/bind/named.conf"]
     #   interval: 30s
@@ -104,16 +102,22 @@ services:
       - development_net
     volumes:
       - ./vol/backups:/backups
-    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync mysql-client postgresql-client cron && cron -f"]
+    entrypoint: >
+      /bin/sh -c "apt update &&
+                  apt install -y rsync default-mysql-client postgresql-client nano cron &&
+                  echo '0 3 * * * /bin/bash /backups/backup.sh' > /etc/cron.d/dailyjob &&
+                  chmod 0644 /etc/cron.d/dailyjob &&
+                  crontab /etc/cron.d/dailyjob &&
+                  cron -f"
     environment:
-      - TZ=UTC 
+      - TZ=UTC+2
 
 #################################################################
 
 
 networks:
   production_net:
-    driver: macvlan
+    driver: bridge
     # driver_opts:
     #   parent: "ens20"
     ipam:
@@ -121,7 +125,7 @@ networks:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
-    driver: macvlan
+    driver: bridge
     # driver_opts:
     #   parent: "ens19"
     ipam:
@@ -129,13 +133,11 @@ networks:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
-    driver: macvlan
     # driver_opts:
     #   parent: "ens21"
+    driver: bridge
     ipam:
       config:
        -  subnet: 172.40.0.0/24
           gateway: 172.40.0.1
-
-volumes:
-  postgres_data:
+          
