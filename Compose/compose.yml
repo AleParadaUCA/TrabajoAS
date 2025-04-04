@@ -39,7 +39,7 @@ services:
         ipv4_address: 172.30.0.11
       services_net:
         ipv4_address: 172.20.0.11
-    entrypoint: ["/bin/sh", "-c", "apt cron && cron -f"]
+    entrypoint: ["/bin/sh", "-c", "apt update && apt install -y rsync cron && cron -f"]
 
   apache:
     image: php:7.4-apache
@@ -97,7 +97,7 @@ services:
     #   retries: 3
 
   nas:
-    image: ubuntu:latest
+    image: debian:latest
     container_name: nas_services
     networks:
       - services_net
@@ -114,24 +114,24 @@ services:
 networks:
   production_net:
     driver: macvlan
-    driver_opts:
-      parent: "ens20"
+    # driver_opts:
+    #   parent: "ens20"
     ipam:
       config:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
     driver: macvlan
-    driver_opts:
-      parent: "ens19"
+    # driver_opts:
+    #   parent: "ens19"
     ipam:
       config:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
     driver: macvlan
-    driver_opts:
-      parent: "ens21"
+    # driver_opts:
+    #   parent: "ens21"
     ipam:
       config:
        -  subnet: 172.40.0.0/24
