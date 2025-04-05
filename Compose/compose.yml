@@ -41,6 +41,8 @@ services:
       services_net:
         ipv4_address: 172.20.0.11
 
+#################################################################
+
   apache:
     image: php:7.4-apache
     container_name: dev_webapi
@@ -76,9 +78,11 @@ services:
     image: ubuntu/bind9:latest 
     container_name: dns_nas_services
     user: bind:bind
+    container_name: dns_services
     networks:
       services_net:
         ipv4_address: 172.20.0.10
+      development_net:
     volumes:
       - ./vol/bind:/etc/bind
       - ./vol/cache:/var/cache/bind
@@ -95,6 +99,9 @@ services:
     networks:
       - services_net
       - development_net
+      services_net:
+        ipv4_address: 172.20.0.12
+      development_net:
     volumes:
       - ./vol/backups:/backups
     entrypoint: >
