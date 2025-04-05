@@ -12,6 +12,7 @@ services:
     networks:
       production_net:
         ipv4_address: 172.30.0.10
+
   php:
     image: php:8.2-fpm
     container_name: prod_php
@@ -51,10 +52,9 @@ services:
       development_net:
         ipv4_address: 172.40.0.10
     command: >
-      sh -c "apt-get update && apt-get install -y libpq-dev dnsutils && 
+      sh -c "apt-get update && apt-get install -y libpq-dev && 
       docker-php-ext-install pdo pdo_mysql && 
       docker-php-entrypoint apache2-foreground"
-    #las dnsutils solo son para comporbar el dns
 
   mysql:
     image: mysql:5.7
@@ -75,7 +75,7 @@ services:
   dns:
     image: ubuntu/bind9:latest 
     container_name: dns_nas_services
-    user: bind:bind  # Ejecutar como usuario bind
+    user: bind:bind
     networks:
       services_net:
         ipv4_address: 172.20.0.10
@@ -88,11 +88,6 @@ services:
       - '53:53/tcp'
     environment:
       - TZ=UTC+2
-    # healthcheck:  #compribar que funciona el dns
-    #   test: ["CMD", "named-checkconf", "/etc/bind/named.conf"]
-    #   interval: 30s
-    #   timeout: 5s
-    #   retries: 3
 
   nas:
     image: debian:latest
