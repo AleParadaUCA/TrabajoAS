@@ -7,24 +7,19 @@ services:
     volumes:
       - ./vol/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./vol/app:/var/www/html
-    ports:
-      - "8080:80"
     networks:
       production_net:
         ipv4_address: 172.30.0.10
 
   php:
-    image: php:8.2-fpm
+    build:
+      dockerfile: ./php.Dockerfile
     container_name: prod_php
     volumes:
       - ./vol/app:/var/www/html
     networks:
       production_net:
         ipv4_address: 172.30.0.12
-    command: >
-      sh -c "apt-get update && apt-get install -y libpq-dev &&
-             docker-php-ext-install pdo pdo_pgsql &&
-             docker-php-entrypoint php-fpm"
 
   postgres_prod:
     image: postgres:14
@@ -44,19 +39,14 @@ services:
 #################################################################
 
   apache:
-    image: php:7.4-apache
+    build:
+        dockerfile: ./apache.Dockerfile
     container_name: dev_webapi
     volumes:
       - ./vol/html:/var/www/html
-    ports:
-      - "8081:80"
     networks:
       development_net:
         ipv4_address: 172.40.0.10
-    command: >
-      sh -c "apt-get update && apt-get install -y libpq-dev && 
-      docker-php-ext-install pdo pdo_mysql && 
-      docker-php-entrypoint apache2-foreground"
 
   mysql:
     image: mysql:5.7
@@ -84,10 +74,7 @@ services:
     volumes:
       - ./vol/bind:/etc/bind
       - ./vol/cache:/var/cache/bind
-      - ./vol/run/named:/var/run/named 
-    ports:
-      - '53:53/udp'
-      - '53:53/tcp'
+      - ./vol/run/named:/var/run/named
 
   nas:
     image: debian:latest
@@ -111,25 +98,25 @@ services:
 
 networks:
   production_net:
-    driver: bridge
-    # driver_opts:
-    #   parent: "ens20"
+    driver: macvlan
+    driver_opts:
+      parent: "ens20"
     ipam:
       config:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
-    driver: bridge
-    # driver_opts:
-    #   parent: "ens19"
+    driver: macvlan
+    driver_opts:
+      parent: "ens19"
     ipam:
       config:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
-    # driver_opts:
-    #   parent: "ens21"
-    driver: bridge
+    driver: macvlan
+    driver_opts:
+      parent: "ens21"
     ipam:
       config:
        -  subnet: 172.40.0.0/24
