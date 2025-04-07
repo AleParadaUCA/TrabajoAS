@@ -1,6 +1,6 @@
 $TTL    2d
 
-$ORIGIN prod.local
+$ORIGIN prod.local.
 
 @       IN      SOA     dns.prod.local. root.prod.local. (
                             2         ; Serial
