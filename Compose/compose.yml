@@ -71,7 +71,6 @@ services:
       development_net:
     volumes:
       - ./vol/bind:/etc/bind
-      - ./vol/cache:/var/cache/bind
       - ./vol/run/named:/var/run/named
 
   nas:
