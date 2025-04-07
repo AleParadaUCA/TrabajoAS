@@ -33,8 +33,6 @@ services:
     networks:
       production_net:
         ipv4_address: 172.30.0.11
-      services_net:
-        ipv4_address: 172.20.0.11
 
 #################################################################
 
