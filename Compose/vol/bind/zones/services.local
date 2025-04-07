@@ -1,0 +1,15 @@
+$TTL    2d
+
+$ORIGIN services.local
+
+@       IN      SOA     dns.services.local. root.services.local. (
+                            2         ; Serial
+                            12h       ; Refresh
+                            15m       ; Retry
+                            4d        ; Expire
+                            2h        ; Negative Cache TTL
+                            )
+
+@       IN      NS      dns.services.local.
+dns     IN      A       172.20.0.10
+nas     IN      A       172.20.0.12

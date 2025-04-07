@@ -1,0 +1,16 @@
+$TTL    2d
+
+$ORIGIN dev.local
+
+@       IN      SOA     dns.dev.local. root.dev.local. (
+                            2         ; Serial
+                            12h       ; Refresh
+                            15m       ; Retry
+                            4d        ; Expire
+                            2h        ; Negative Cache TTL
+                            )
+
+@       IN      NS      dns.dev.local.
+        IN      A       172.40.0.10
+sql     IN      A       172.40.0.11
+dns     IN      A       172.20.0.10

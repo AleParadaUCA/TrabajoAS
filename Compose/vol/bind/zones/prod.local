@@ -1,0 +1,17 @@
+$TTL    2d
+
+$ORIGIN prod.local
+
+@       IN      SOA     dns.prod.local. root.prod.local. (
+                            2         ; Serial
+                            12h       ; Refresh
+                            15m       ; Retry
+                            4d        ; Expire
+                            2h        ; Negative Cache TTL
+                            )
+
+@       IN      NS      dns.prod.local.
+        IN      A       172.30.0.10
+sql     IN      A       172.30.0.11
+php     IN      A       172.30.0.12
+dns     IN      A       172.20.0.10
