@@ -4,9 +4,6 @@ $db = "testdb";
 $user = "postgres";
 $pass = "mysecretpassword";
 
-// echo "<h2>Información del Servidor PHP</h2>";
-// phpinfo();
-
 echo "<h2>Verificando conexión con PostgreSQL...</h2>";
 
 try {
