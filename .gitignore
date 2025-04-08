@@ -1,6 +1,5 @@
-Ivan/backups/mysql/
-/Compose/vol/mysql_data
-/Compose/vol/postgres_data
-/Compose/vol/run/named
-/Compose/vol/backups/mysql
-/Compose/vol/backups/postgres
+/vol/mysql_data
+/vol/postgres_data
+/vol/run/named
+/vol/backups/mysql
+/vol/backups/postgres
