@@ -1,0 +1,9 @@
+PasswordAuthentication no
+PubkeyAuthentication no
+KbdInteractiveAuthentication yes
+
+AllowUsers Usuario1
+PermitRootLogin no
+
+MaxAuthTries 3
+PermitEmptyPasswords no

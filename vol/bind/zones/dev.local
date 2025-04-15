@@ -13,4 +13,5 @@ $ORIGIN dev.local.
 @       IN      NS      dns.dev.local.
         IN      A       172.40.0.10
 db      IN      A       172.40.0.11
+ssh     IN      A       172.40.0.20
 dns     IN      A       172.20.0.10

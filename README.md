@@ -1,6 +1,6 @@
 # TrabajoAS
 
-Documentacion disponible en el documento **"Documentación_AS.pdf"**
+Documentación disponible en el documento **"Documentación_AS.pdf"**
 
 ## Division:
 
