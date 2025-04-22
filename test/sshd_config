@@ -1,0 +1,9 @@
+PasswordAuthentication no
+PubkeyAuthentication no
+KbdInteractiveAuthentication yes
+
+AllowUsers docker
+PermitRootLogin no
+
+MaxAuthTries 3
+PermitEmptyPasswords no

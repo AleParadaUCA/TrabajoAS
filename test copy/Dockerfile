@@ -1,7 +1,7 @@
 FROM debian:latest
 
 RUN apt-get update && \
-    apt-get install -y ssh openssh-server net-tools nano && \
+    apt-get install -y ssh openssh-server net-tools && \
     mkdir /var/run/sshd
 
 RUN useradd -m -s /bin/bash docker && \
