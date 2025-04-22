@@ -6,6 +6,6 @@ RUN mkdir /run/sshd
 RUN ssh-keygen -A
 
 RUN useradd -ms /bin/bash Usuario1
-RUN usermod -p '*' Usuario1
+RUN echo "Usuario1:Usu123" | chpasswd
 
 CMD /usr/sbin/sshd -D -e
