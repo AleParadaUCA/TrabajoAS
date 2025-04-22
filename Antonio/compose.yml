@@ -8,7 +8,6 @@ services:
       - ./vol/ssh_dev/sshd_config:/etc/ssh/sshd_config
       - ./vol/ssh_dev/home:/home
       - ./vol/ssh_dev/sshd-pam:/etc/pam.d/sshd
-      - ./vol/ssh_dev/shadow:/etc/shadow
     networks:
       development_net:
         ipv4_address: 172.40.0.20
@@ -22,7 +21,6 @@ services:
     volumes:
       - ./vol/ssh_ser/sshd_config:/etc/ssh/sshd_config
       - ./vol/ssh_ser/home:/home
-      - ./vol/ssh_dev/shadow:/etc/shadow
     networks:
       services_net:
         ipv4_address: 172.20.0.20
