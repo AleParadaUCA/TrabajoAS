@@ -6,5 +6,6 @@ RUN mkdir /run/sshd
 RUN ssh-keygen -A
 
 RUN useradd -ms /bin/bash Usuario1
+RUN usermod -p '*' Usuario1
 
 CMD /usr/sbin/sshd -D -e
