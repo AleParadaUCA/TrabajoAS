@@ -7,7 +7,7 @@ services:
     volumes:
       - ./vol/ssh_dev/sshd_config:/etc/ssh/sshd_config
       - ./vol/ssh_dev/home:/home
-      - ./vol/ssh_dev/sshd-pam:/etc/pam.d/
+      - ./vol/ssh_dev/sshd-pam:/etc/pam.d/sshd-pam
     networks:
       development_net:
         ipv4_address: 172.40.0.20
