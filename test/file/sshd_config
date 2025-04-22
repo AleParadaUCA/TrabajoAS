@@ -1,7 +1,7 @@
 PasswordAuthentication no
 PubkeyAuthentication yes
 
-
+Port 22
 PermitRootLogin no
 
 MaxAuthTries 3
