@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  ssh-server:
+    image: rastasheep/ubuntu-sshd:latest
+    container_name: ssh-test
+    ports:
+      - "2222:22"
+    volumes:
+      - ./test.pub:/home/docker/.ssh/authorized_keys
+    command: bash -c "
+      id -u docker &>/dev/null || useradd -m -s /bin/bash docker && \
+      echo 'docker:root' | chpasswd && \
+      mkdir -p /home/docker/.ssh && \
+      chmod 700 /home/docker/.ssh && \
+      chmod 600 /home/docker/.ssh/authorized_keys && \
+      chown -R docker:docker /home/docker/.ssh && \
+      /usr/sbin/sshd -D "
