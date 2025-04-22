@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ssh-server:
+    build: .
+    container_name: ssh-test
+    ports:
+      - "2222:22"
+    volumes:
+      - ./file:/etc/ssh
+      - ./authorized_keys:/home/docker/.ssh/authorized_keys
+    
+    command: >
+        sh -c "
+        ssh-keygen -A &&
+
+        sed -i 's/#LogLevel INFO/LogLevel DEBUG/' /etc/ssh/sshd_config &&
+
+        # Ensure docker user exists
+        id -u docker &>/dev/null || useradd -m -s /bin/bash docker &&
+
+        chown -R docker:docker /home/docker/.ssh &&
+        chmod 700 /home/docker/.ssh &&
+        chmod 600 /home/docker/.ssh/authorized_keys &&
+
+        /usr/sbin/sshd -D
+        "
