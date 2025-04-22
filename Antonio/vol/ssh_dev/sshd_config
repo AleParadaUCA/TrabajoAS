@@ -2,6 +2,8 @@ PasswordAuthentication no
 PubkeyAuthentication no
 KbdInteractiveAuthentication yes
 
+AuthenticationMethods keyboard-interactive:pam
+
 AllowUsers Usuario1
 PermitRootLogin no
 
