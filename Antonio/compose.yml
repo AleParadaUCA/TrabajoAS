@@ -1,0 +1,55 @@
+services:
+
+  ssh_dev:
+    build:
+        dockerfile: ./ssh_dev.Dockerfile
+    container_name: dev_ssh
+    volumes:
+      - ./vol/ssh_dev/ssh:/etc/ssh
+      - ./vol/ssh_dev/home:/home
+      - ./vol/ssh_dev/ssh-pam:/etc/pam.d/sshd
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.20
+
+#################################################################
+
+  ssh_ser:
+    build:
+        dockerfile: ./ssh_ser.Dockerfile
+    container_name: ssh_services
+    volumes:
+      - ./vol/ssh_ser/ssh:/etc/ssh
+      - ./vol/ssh_ser/home:/home
+    networks:
+      services_net:
+        ipv4_address: 172.20.0.20
+
+#################################################################
+
+
+networks:
+  production_net:
+    driver: macvlan
+    driver_opts:
+      parent: "ens20"
+    ipam:
+      config:
+       -  subnet: 172.30.0.0/24
+          gateway: 172.30.0.1
+  services_net:
+    driver: macvlan
+    driver_opts:
+      parent: "ens19"
+    ipam:
+      config:
+       -  subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+  development_net:
+    driver: macvlan
+    driver_opts:
+      parent: "ens21"
+    ipam:
+      config:
+       -  subnet: 172.40.0.0/24
+          gateway: 172.40.0.1

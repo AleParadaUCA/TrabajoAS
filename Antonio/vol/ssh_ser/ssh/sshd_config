@@ -1,0 +1,8 @@
+PasswordAuthentication no
+PubkeyAuthentication yes
+
+AllowUsers Usuario2
+PermitRootLogin no
+
+MaxAuthTries 3
+PermitEmptyPasswords no
