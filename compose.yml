@@ -68,9 +68,9 @@ services:
         dockerfile: ./ssh_dev.Dockerfile
     container_name: dev_ssh
     volumes:
-      - ./vol/ssh_dev/ssh:/etc/ssh
+      - ./vol/ssh_dev/sshd_config:/etc/ssh/sshd_config
       - ./vol/ssh_dev/home:/home
-      - ./vol/ssh_dev/ssh-pam:/etc/pam.d/sshd
+      - ./vol/ssh_dev/sshd-pam:/etc/pam.d/sshd
     networks:
       development_net:
         ipv4_address: 172.40.0.20
@@ -104,7 +104,7 @@ services:
         dockerfile: ./ssh_ser.Dockerfile
     container_name: ssh_services
     volumes:
-      - ./vol/ssh_ser/ssh:/etc/ssh
+      - ./vol/ssh_ser/sshd_config:/etc/ssh/sshd_config
       - ./vol/ssh_ser/home:/home
     networks:
       services_net:
