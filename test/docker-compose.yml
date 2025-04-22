@@ -12,6 +12,7 @@ services:
     
     command: >
         sh -c "
+        ssh-keygen -A &&
 
         sed -i 's/#LogLevel INFO/LogLevel DEBUG/' /etc/ssh/sshd_config &&
 
