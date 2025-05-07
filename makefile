@@ -16,6 +16,8 @@ apache:
 	docker exec -it dev_webapi  /bin/bash
 nas:
 	docker exec -it nas_services  /bin/bash
+samba:
+	docker exec -it samba_services bash
 
 # con cont c se para !! 
 
