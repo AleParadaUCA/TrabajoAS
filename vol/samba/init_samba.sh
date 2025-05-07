@@ -1,21 +1,31 @@
 #!/bin/bash
 
 for i in 1 2 3 4 5; do
-    groupadd -g 20$i empleado$i
-    useradd -u 20$i -g empleado$i -M -s /sbin/nologin empleado$i
-    echo "empleado$i:password$i" | chpasswd
+    mkdir -p /mnt/desarrollo/SW$i /mnt/revision/SW$i /mnt/publico/SW$i
+    # (echo password$i; echo password$i) | smbpasswd -s -a empleado$i
+    
+    # chown empleado$i:empleado$i /mnt/desarrollo/SW$i
+    # chmod 700 /mnt/desarrollo/SW$i
 
-    # Agregar al sistema Samba
-    (echo password$i; echo password$i) | smbpasswd -s -a empleado$i
+    # chown empleado$i:empleado$i /mnt/revision/SW$i
+    # chmod 770 /mnt/revision/SW$i
+
+    # chown revisor:revisor /mnt/publico/SW$i
+    # chmod 755 /mnt/publico/SW$i
+
+    
 done
 
-# Revisor
-groupadd -g 300 revisor
-useradd -u 300 -g revisor -M -s /sbin/nologin revisor
-echo "revisor:password6" | chpasswd
-(echo password6; echo password6) | smbpasswd -s -a revisor
+# (echo password6; echo password6) | smbpasswd -s -a revisor
 
 exec samba.sh \
+  -p \
+  -u 'empleado1;password1' \
+  -u 'empleado2;password2' \
+  -u 'empleado3;password3' \
+  -u 'empleado4;password4' \
+  -u 'empleado5;password5' \
+  -u 'revisor;revisor' \
   -s 'SW1;/mnt/desarrollo/SW1;yes;no;no;empleado1' \
   -s 'SW2;/mnt/desarrollo/SW2;yes;no;no;empleado2' \
   -s 'SW3;/mnt/desarrollo/SW3;yes;no;no;empleado3' \
@@ -26,8 +36,4 @@ exec samba.sh \
   -s 'rev3;/mnt/revision/SW3;yes;no;no;empleado3,revisor' \
   -s 'rev4;/mnt/revision/SW4;yes;no;no;empleado4,revisor' \
   -s 'rev5;/mnt/revision/SW5;yes;no;no;empleado5,revisor' \
-  -s 'pub1;/mnt/publico/SW1;yes;yes;no;revisor' \
-  -s 'pub2;/mnt/publico/SW2;yes;yes;no;revisor' \
-  -s 'pub3;/mnt/publico/SW3;yes;yes;no;revisor' \
-  -s 'pub4;/mnt/publico/SW4;yes;yes;no;revisor' \
-  -s 'pub5;/mnt/publico/SW5;yes;yes;no;revisor' \
+  -s 'publico;/mnt/publico;yes;yes;no;;;revisor' \
