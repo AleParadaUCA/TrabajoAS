@@ -7,6 +7,12 @@ down:
 restart: 
 	docker compose down
 	docker compose up
+res: 
+	docker compose down ftp
+	docker compose up -d ftp
+
+ftp:
+	docker exec -it ftp_publico bash
 
 console:
 	docker exec -it prod_postgres /bin/bash

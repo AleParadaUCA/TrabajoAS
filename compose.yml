@@ -80,13 +80,6 @@ services:
   samba:
     image: dperson/samba
     container_name: samba_services
-    # environment:
-    #   - USER1=empleado1;password1
-    #   - USER2=empleado2;password2
-    #   - USER3=empleado3;password3
-    #   - USER4=empleado4;password4
-    #   - USER5=empleado5;password5
-    #   - USER6=revisor;password6
     volumes:  
       - ./vol/samba/desarrollo:/mnt/desarrollo
       - ./vol/samba/revision:/mnt/revision
@@ -135,6 +128,17 @@ services:
 
 #################################################################
 
+  ftp:
+      build:
+        dockerfile: ftp.Dockerfile
+      container_name: ftp_publico
+      # volumes:
+        # - ./vol/samba/publico1:/home/vsftpd/publico
+        # - ./vol/samba/vsftpd.conf:/etc/vsftpd/vsftpd.conf
+      networks:
+        development_net:
+          ipv4_address: 172.40.0.40
+      dns: 172.20.0.10
 
 networks:
   production_net:
