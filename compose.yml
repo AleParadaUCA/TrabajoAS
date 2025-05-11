@@ -37,16 +37,16 @@ services:
 
 #################################################################
 
-  apache:
-    build:
-        dockerfile: ./apache.Dockerfile
-    container_name: dev_webapi
-    volumes:
-      - ./vol/html:/var/www/html
-    networks:
-      development_net:
-        ipv4_address: 172.40.0.10
-    dns: 172.20.0.10
+  # apache:
+  #   build:
+  #       dockerfile: ./apache.Dockerfile
+  #   container_name: dev_webapi
+  #   volumes:
+  #     - ./vol/html:/var/www/html
+  #   networks:
+  #     development_net:
+  #       ipv4_address: 172.40.0.10
+  #   dns: 172.20.0.10
 
   # mysql:
   #   image: mysql:5.7
@@ -76,36 +76,46 @@ services:
   #       ipv4_address: 172.40.0.20
   #   dns: 172.20.0.10
 
+  ftp:
+      build:
+        dockerfile: ftp.Dockerfile
+      container_name: ftp_publico
+      volumes:
+        - ./vol/samba/publico:/home/publico:ro
+      networks:
+        development_net:
+          ipv4_address: 172.40.0.40
+      dns: 172.20.0.10
 
-  # samba:
-  #   image: dperson/samba
-  #   container_name: samba_services
-  #   volumes:  
-  #     - ./vol/samba/desarrollo:/mnt/desarrollo
-  #     - ./vol/samba/revision:/mnt/revision
-  #     - ./vol/samba/publico:/mnt/publico
-  #     - ./vol/samba/init_samba.sh:/init_samba.sh
-  #   networks:
-  #     development_net:
-  #       ipv4_address: 172.40.0.30
-  #   dns: 172.20.0.10
-  #   command: bash /init_samba.sh
-
-  apache:
-    build:
-        dockerfile: ./vol/apache/apache.Dockerfile
-    container_name: apache_server
-    ports:
-      - "8082:80"
-    volumes:
-      - ./vol/samba/publico:/usr/local/apache2/htdocs/ftp/publico:ro
-      - ./vol/apache/pepe:/usr/local/apache2/htdocs/pepe:ro
+  samba:
+    image: dperson/samba
+    container_name: samba_services
+    volumes:  
+      - ./vol/samba/desarrollo:/mnt/desarrollo
+      - ./vol/samba/revision:/mnt/revision
+      - ./vol/samba/publico:/mnt/publico
+      - ./vol/samba/init_samba.sh:/init_samba.sh
     networks:
       development_net:
         ipv4_address: 172.40.0.30
-        ipv4_address: 172.40.0.50
     dns: 172.20.0.10
     command: bash /init_samba.sh
+
+  # apache:
+  #   build:
+  #       dockerfile: ./vol/apache/apache.Dockerfile
+  #   container_name: apache_server
+  #   ports:
+  #     - "8082:80"
+  #   volumes:
+  #     - ./vol/samba/publico:/usr/local/apache2/htdocs/ftp/publico:ro
+  #     - ./vol/apache/pepe:/usr/local/apache2/htdocs/pepe:ro
+  #   networks:
+  #     development_net:
+  #       ipv4_address: 172.40.0.30
+  #       ipv4_address: 172.40.0.50
+  #   dns: 172.20.0.10
+  #   command: bash /init_samba.sh
 
 #################################################################
 
@@ -144,38 +154,27 @@ services:
 
 #################################################################
 
-  ftp:
-      build:
-        dockerfile: ftp.Dockerfile
-      container_name: ftp_publico
-      volumes:
-        - ./vol/samba/publico:/home/publico:ro
-      networks:
-        development_net:
-          ipv4_address: 172.40.0.40
-      # dns: 172.20.0.10
-
 networks:
   production_net:
     driver: macvlan
-    # driver_opts:
-    #   parent: "ens20"
+    driver_opts:
+      parent: "ens20"
     ipam:
       config:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
     driver: macvlan
-    # driver_opts:
-    #   parent: "ens19"
+    driver_opts:
+      parent: "ens19"
     ipam:
       config:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
     driver: macvlan
-    # driver_opts:
-    #   parent: "ens21"
+    driver_opts:
+      parent: "ens21"
     ipam:
       config:
        -  subnet: 172.40.0.0/24
