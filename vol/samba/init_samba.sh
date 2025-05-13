@@ -1,22 +1,8 @@
 #!/bin/bash
 
 for i in 1 2 3 4 5; do
-    mkdir -p /mnt/desarrollo/SW$i /mnt/revision/SW$i /mnt/publico/SW$i
-    # (echo password$i; echo password$i) | smbpasswd -s -a empleado$i
-    
-    # chown empleado$i:empleado$i /mnt/desarrollo/SW$i
-    # chmod 700 /mnt/desarrollo/SW$i
-
-    # chown empleado$i:empleado$i /mnt/revision/SW$i
-    # chmod 770 /mnt/revision/SW$i
-
-    # chown revisor:revisor /mnt/publico/SW$i
-    # chmod 755 /mnt/publico/SW$i
-
-    
+    mkdir -p /mnt/desarrollo/SW$i /mnt/revision/SW$i /mnt/publico/SW$i    
 done
-
-# (echo password6; echo password6) | smbpasswd -s -a revisor
 
 exec samba.sh \
   -p \
