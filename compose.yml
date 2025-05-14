@@ -76,46 +76,51 @@ services:
   #       ipv4_address: 172.40.0.20
   #   dns: 172.20.0.10
 
-  ftp:
-      build:
-        dockerfile: ftp.Dockerfile
-      container_name: ftp_publico
-      volumes:
-        - ./vol/samba/publico:/home/publico:ro
-      networks:
-        development_net:
-          ipv4_address: 172.40.0.40
-      dns: 172.20.0.10
+  # ftp:
+  #     build:
+  #       dockerfile: ftp.Dockerfile
+  #     container_name: ftp_publico
+  #     volumes:
+  #       - ./vol/samba/publico:/home/publico:ro
+  #     networks:
+  #       development_net:
+  #         ipv4_address: 172.40.0.40
+  #     dns: 172.20.0.10
 
-  samba:
-    image: dperson/samba
-    container_name: samba_services
-    volumes:  
-      - ./vol/samba/desarrollo:/mnt/desarrollo
-      - ./vol/samba/revision:/mnt/revision
-      - ./vol/samba/publico:/mnt/publico
-      - ./vol/samba/init_samba.sh:/init_samba.sh
-    networks:
-      development_net:
-        ipv4_address: 172.40.0.30
-    dns: 172.20.0.10
-    command: bash /init_samba.sh
-
-  # apache:
-  #   build:
-  #       dockerfile: ./vol/apache/apache.Dockerfile
-  #   container_name: apache_server
-  #   ports:
-  #     - "8082:80"
-  #   volumes:
-  #     - ./vol/samba/publico:/usr/local/apache2/htdocs/ftp/publico:ro
-  #     - ./vol/apache/pepe:/usr/local/apache2/htdocs/pepe:ro
+  # samba:
+  #   image: dperson/samba
+  #   container_name: samba_services
+  #   volumes:  
+  #     - ./vol/samba/desarrollo:/mnt/desarrollo
+  #     - ./vol/samba/revision:/mnt/revision
+  #     - ./vol/samba/publico:/mnt/publico
+  #     - ./vol/samba/init_samba.sh:/init_samba.sh
   #   networks:
   #     development_net:
   #       ipv4_address: 172.40.0.30
-  #       ipv4_address: 172.40.0.50
   #   dns: 172.20.0.10
   #   command: bash /init_samba.sh
+
+  apache:
+    image: httpd:latest
+    container_name: apache_server
+    ports:
+      - "8082:80"
+    volumes:
+      - ./vol/samba/publico:/usr/local/apache2/mmt/ftp/publico:ro
+      - ./vol/apache/pepe:/usr/local/apache2/htdocs/pepe:ro
+      - ./vol/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./vol/apache/index.html:/usr/local/apache2/htdocs/index.html
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.50
+    dns: 172.20.0.10
+    command: >
+          bash -c "
+          mkdir -p /usr/local/apache2/conf/auth && \
+          htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd documentos a && \
+          httpd-foreground
+          "
 
 #################################################################
 
@@ -156,25 +161,22 @@ services:
 
 networks:
   production_net:
-    driver: macvlan
-    driver_opts:
-      parent: "ens20"
+    driver: bridge
+
     ipam:
       config:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
-    driver: macvlan
-    driver_opts:
-      parent: "ens19"
+    driver: bridge
+
     ipam:
       config:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
-    driver: macvlan
-    driver_opts:
-      parent: "ens21"
+    driver: bridge
+
     ipam:
       config:
        -  subnet: 172.40.0.0/24

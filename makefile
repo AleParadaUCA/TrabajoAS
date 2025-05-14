@@ -8,8 +8,8 @@ restart:
 	docker compose down
 	docker compose up
 res: 
-	docker compose down ftp
-	docker compose up -d ftp
+	docker compose down 
+	docker compose up -d
 
 ftp:
 	docker exec -it ftp_publico bash
