@@ -108,7 +108,6 @@ services:
       - "8082:80"
     volumes:
       - ./vol/samba/publico:/usr/local/apache2/mmt/ftp/publico:ro
-      - ./vol/apache/pepe:/usr/local/apache2/htdocs/pepe:ro
       - ./vol/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./vol/apache/index.html:/usr/local/apache2/htdocs/index.html
     networks:
@@ -118,9 +117,11 @@ services:
     command: >
           bash -c "
           mkdir -p /usr/local/apache2/conf/auth && \
-          htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd documentos a && \
-          httpd-foreground
+          htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd a a && \
+          httpd-foreground && \
+          chmod -R o+r /usr/local/apache2/mmt/ftp/publico
           "
+        # htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd documentos GraTiS! && \
 
 #################################################################
 
