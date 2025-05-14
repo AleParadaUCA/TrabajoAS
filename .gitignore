@@ -1,5 +1,4 @@
-/vol/mysql_data
-/vol/postgres_data
-/vol/run/named
-/vol/backups/mysql
-/vol/backups/postgres
+/P0/mysql_data
+/P0/postgres_data
+/P0/backups/mysql
+/P0/backups/postgres

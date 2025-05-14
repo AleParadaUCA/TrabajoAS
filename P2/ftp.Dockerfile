@@ -9,7 +9,7 @@ RUN mkdir -p /var/run/vsftpd/empty && \
     chmod 755 /home/publico
 
 # Crear el archivo de configuración vsftpd.conf
-COPY vol/samba/vsftpd.conf /etc/vsftpd/vsftpd.conf
+COPY P2/samba/vsftpd.conf /etc/vsftpd/vsftpd.conf
 
 # Exponer el puerto FTP
 EXPOSE 21

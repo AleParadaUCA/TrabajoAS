@@ -1,6 +1,6 @@
 FROM debian:latest
 
-ADD --chmod=644 dailyjob /etc/cron.d/
+ADD --chmod=644 P0/dailyjob /etc/cron.d/
 
 RUN apt-get update 
 RUN apt-get install -y rsync default-mysql-client postgresql-client cron
