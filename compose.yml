@@ -87,19 +87,19 @@ services:
   #         ipv4_address: 172.40.0.40
   #     dns: 172.20.0.10
 
-  # samba:
-  #   image: dperson/samba
-  #   container_name: samba_services
-  #   volumes:  
-  #     - ./vol/samba/desarrollo:/mnt/desarrollo
-  #     - ./vol/samba/revision:/mnt/revision
-  #     - ./vol/samba/publico:/mnt/publico
-  #     - ./vol/samba/init_samba.sh:/init_samba.sh
-  #   networks:
-  #     development_net:
-  #       ipv4_address: 172.40.0.30
-  #   dns: 172.20.0.10
-  #   command: bash /init_samba.sh
+  samba:
+    image: dperson/samba
+    container_name: samba_services
+    volumes:  
+      - ./vol/samba/desarrollo:/mnt/desarrollo
+      - ./vol/samba/revision:/mnt/revision
+      - ./vol/samba/publico:/mnt/publico
+      - ./vol/samba/init_samba.sh:/init_samba.sh
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.30
+    dns: 172.20.0.10
+    command: bash /init_samba.sh
 
   apache:
     image: httpd:latest
@@ -117,11 +117,10 @@ services:
     command: >
           bash -c "
           mkdir -p /usr/local/apache2/conf/auth && \
-          htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd a a && \
+          htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd documentos GraTiS! && \
           httpd-foreground && \
           chmod -R o+r /usr/local/apache2/mmt/ftp/publico
           "
-        # htpasswd -cb /usr/local/apache2/conf/auth/.htpasswd documentos GraTiS! && \
 
 #################################################################
 
@@ -162,23 +161,25 @@ services:
 
 networks:
   production_net:
-    driver: bridge
-
+    driver: macvlan
+    driver_opts:
+      parent: "ens20"
     ipam:
       config:
        -  subnet: 172.30.0.0/24
           gateway: 172.30.0.1
   services_net:
-    driver: bridge
-
+    driver: macvlan
+    driver_opts:
+      parent: "ens19"
     ipam:
       config:
        -  subnet: 172.20.0.0/24
           gateway: 172.20.0.1
   development_net:
-    driver: bridge
-
+    driver: macvlan
+    driver_opts:
+      parent: "ens21"
     ipam:
       config:
        -  subnet: 172.40.0.0/24
-          gateway: 172.40.0.1
